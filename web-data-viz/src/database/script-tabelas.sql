@@ -5,11 +5,11 @@
 /*
 comandos para mysql server
 */
-
+-- drop database aquatech;
 CREATE DATABASE aquatech;
 
 USE aquatech;
-
+show tables;
 CREATE TABLE empresa (
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	razao_social VARCHAR(50),
@@ -60,3 +60,9 @@ insert into empresa (razao_social, codigo_ativacao) values ('Empresa 1', 'ED145B
 insert into empresa (razao_social, codigo_ativacao) values ('Empresa 2', 'A1B2C3');
 insert into aquario (descricao, fk_empresa) values ('Aquário de Estrela-do-mar', 1);
 insert into aquario (descricao, fk_empresa) values ('Aquário de Peixe-dourado', 2);
+
+alter table usuario add column cpf char(11);
+
+select*from empresa;
+select*from usuario;
+describe usuario;

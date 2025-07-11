@@ -7,9 +7,10 @@ var caminho_env = ambiente_processo === 'producao' ? '.env' : '.env.dev';
 
 require("dotenv").config({ path: caminho_env });
 
-var express = require("express");
-var cors = require("cors");
-var path = require("path");
+var express = require("express");  // servidor
+var cors = require("cors");        // segurança (permite acesso externo)
+var path = require("path");        // ajuda com caminhos de pasta
+
 var PORTA_APP = process.env.APP_PORT;
 var HOST_APP = process.env.APP_HOST;
 
@@ -22,11 +23,11 @@ var medidasRouter = require("./src/routes/medidas");
 var aquariosRouter = require("./src/routes/aquarios");
 var empresasRouter = require("./src/routes/empresas");
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.json());  // permite enviar/receber JSON
+app.use(express.urlencoded({ extended: false }));  // permite ler dados de formulários
+app.use(express.static(path.join(__dirname, "public")));  // arquivos públicos (HTML, CSS, JS)
+app.use(cors());  // permite acesso cruzado (por exemplo: do navegador para o servidor)
 
-app.use(cors());
 
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
