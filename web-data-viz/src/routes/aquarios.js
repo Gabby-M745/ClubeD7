@@ -1,5 +1,5 @@
-var express = require("express");
-var router = express.Router();
+var express = require("express");//fixo
+var router = express.Router();//fixo
 
 var aquarioController = require("../controllers/aquarioController");
 

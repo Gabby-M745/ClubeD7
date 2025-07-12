@@ -1,7 +1,6 @@
 -- Arquivo de apoio, caso você queira criar tabelas como as aqui criadas para a API funcionar.
 -- Você precisa executar os comandos no banco de dados para criar as tabelas,
 -- ter este arquivo aqui não significa que a tabela em seu BD estará como abaixo!
-
 /*
 comandos para mysql server
 */
@@ -10,59 +9,103 @@ CREATE DATABASE aquatech;
 
 USE aquatech;
 show tables;
-CREATE TABLE empresa (
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	razao_social VARCHAR(50),
-	cnpj CHAR(14),
-	codigo_ativacao VARCHAR(50)
+
+CREATE TABLE unidade (
+    idUnidade INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(45) NOT NULL
 );
 
-CREATE TABLE usuario (
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	nome VARCHAR(50),
-	email VARCHAR(50),
-	senha VARCHAR(50),
-	fk_empresa INT,
-	FOREIGN KEY (fk_empresa) REFERENCES empresa(id)
+-- Tabela DESBRAVADOR: pessoas avaliadas
+CREATE TABLE desbravador (
+    idDesbravador INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(45),
+    sobrenome VARCHAR(45) ,
+    email VARCHAR(45) NOT NULL UNIQUE,
+    idade INT ,
+    fkUnidade INT,
+    FOREIGN KEY (fkUnidade) REFERENCES unidade(idUnidade)
 );
 
-CREATE TABLE aviso (
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	titulo VARCHAR(100),
-	descricao VARCHAR(150),
-	fk_usuario INT,
-	FOREIGN KEY (fk_usuario) REFERENCES usuario(id)
+-- Tabela CRITERIO: tipos de avaliação
+CREATE TABLE criterio (
+    idCriterio INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100)
 );
 
-create table aquario (
-/* em nossa regra de negócio, um aquario tem apenas um sensor */
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	descricao VARCHAR(300),
-	fk_empresa INT,
-	FOREIGN KEY (fk_empresa) REFERENCES empresa(id)
+-- Tabela AVALIACAO: avaliações feitas em uma data para um desbravador
+CREATE TABLE avaliacao (
+    idAvaliacao INT PRIMARY KEY AUTO_INCREMENT,
+    registro DATE,
+    fkDesbravador INT,
+    FOREIGN KEY (fkDesbravador) REFERENCES desbravador(idDesbravador)
 );
 
-/* esta tabela deve estar de acordo com o que está em INSERT de sua API do arduino - dat-acqu-ino */
 
-create table medida (
-	id INT PRIMARY KEY AUTO_INCREMENT,
-	dht11_umidade DECIMAL,
-	dht11_temperatura DECIMAL,
-	luminosidade DECIMAL,
-	lm35_temperatura DECIMAL,
-	chave TINYINT,
-	momento DATETIME,
-	fk_aquario INT,
-	FOREIGN KEY (fk_aquario) REFERENCES aquario(id)
+-- Tabela NOTA: liga avaliacao + criterio + pontuação
+CREATE TABLE nota (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    fkAvaliacao INT,
+    fkCriterio INT,
+    pontuacao DECIMAL(4,2),
+    FOREIGN KEY (fkAvaliacao) REFERENCES avaliacao(idAvaliacao),
+    FOREIGN KEY (fkCriterio) REFERENCES criterio(idCriterio)
 );
 
-insert into empresa (razao_social, codigo_ativacao) values ('Empresa 1', 'ED145B');
-insert into empresa (razao_social, codigo_ativacao) values ('Empresa 2', 'A1B2C3');
-insert into aquario (descricao, fk_empresa) values ('Aquário de Estrela-do-mar', 1);
-insert into aquario (descricao, fk_empresa) values ('Aquário de Peixe-dourado', 2);
+-- INSERTs de exemplo
 
-alter table usuario add column cpf char(11);
+-- Unidades
+INSERT INTO unidade (nome) VALUES 
+('Falcões Valentes'),
+('Águias Reais');
 
-select*from empresa;
-select*from usuario;
-describe usuario;
+-- Desbravadores
+INSERT INTO desbravador (nome, sobrenome, email, idade, fkUnidade) VALUES
+('João', 'Silva', 'joao@email.com', 13, 1),
+('Maria', 'Souza', 'maria@email.com', 16, 2);
+
+-- Critérios de avaliação
+INSERT INTO criterio (nome) VALUES
+('Pontualidade'),
+('Comportamento'),
+('Caderno'),
+('Lição Bíblica');
+
+-- Avaliações (registro com data automática)
+INSERT INTO avaliacao (fkDesbravador) VALUES
+(1),  -- João
+(2);  -- Maria
+
+-- Notas para as avaliações
+-- João (idAvaliacao = 1)
+INSERT INTO nota (fkAvaliacao, fkCriterio, pontuacao) VALUES
+(1, 1, 8.5),
+(1, 2, 9.0);
+
+-- Maria (idAvaliacao = 2)
+INSERT INTO nota (fkAvaliacao, fkCriterio, pontuacao) VALUES
+(2, 1, 7.0),
+(2, 4, 8.0);
+
+-- Consulta final com tipo de desbravador deduzido
+SELECT 
+    d.idDesbravador,
+    d.nome,
+    d.sobrenome,
+    d.email,
+    d.idade,
+    CASE 
+        WHEN d.idade >= 15 THEN 'diretoria' 
+        ELSE 'comum' 
+    END AS tipoDesbravador,
+    u.nome AS unidade
+FROM desbravador d
+JOIN unidade u ON d.fkUnidade = u.idUnidade;
+
+select*from desbravador;
+select*from avaliacao;
+select*from criterio;
+select*from nota;
+/*select*from usuario;
+*/
+select*from unidade;
+/*describe usuario;*/
