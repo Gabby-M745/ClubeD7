@@ -1,15 +1,25 @@
 -- Arquivo de apoio, caso você queira criar tabelas como as aqui criadas para a API funcionar.
 -- Você precisa executar os comandos no banco de dados para criar as tabelas,
 -- ter este arquivo aqui não significa que a tabela em seu BD estará como abaixo!
-/*
-comandos para mysql server
-*/
+
+-- comandos para mysql server
 -- drop database aquatech;
 CREATE DATABASE aquatech;
 
 USE aquatech;
-show tables;
+SHOW TABLES;
 
+-- Tabela USUARIO: responsáveis pelo acesso (conselheiro ou admin)
+CREATE TABLE usuario (
+    idUsuario INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(45) NOT NULL,
+    email VARCHAR(45) UNIQUE NOT NULL,
+    senha VARCHAR(45) NOT NULL,
+    tipo VARCHAR(20) DEFAULT 'conselheiro',
+    CONSTRAINT chkTipoUsuario CHECK (tipo IN ('conselheiro', 'admin'))
+);
+
+-- Tabela UNIDADE: grupos de desbravadores
 CREATE TABLE unidade (
     idUnidade INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(45) NOT NULL
@@ -19,9 +29,9 @@ CREATE TABLE unidade (
 CREATE TABLE desbravador (
     idDesbravador INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(45),
-    sobrenome VARCHAR(45) ,
+    sobrenome VARCHAR(45),
     email VARCHAR(45) NOT NULL UNIQUE,
-    idade INT ,
+    idade INT,
     fkUnidade INT,
     FOREIGN KEY (fkUnidade) REFERENCES unidade(idUnidade)
 );
@@ -35,11 +45,10 @@ CREATE TABLE criterio (
 -- Tabela AVALIACAO: avaliações feitas em uma data para um desbravador
 CREATE TABLE avaliacao (
     idAvaliacao INT PRIMARY KEY AUTO_INCREMENT,
-    registro DATE,
+    registro DATE DEFAULT CURRENT_DATE,
     fkDesbravador INT,
     FOREIGN KEY (fkDesbravador) REFERENCES desbravador(idDesbravador)
 );
-
 
 -- Tabela NOTA: liga avaliacao + criterio + pontuação
 CREATE TABLE nota (
@@ -52,6 +61,10 @@ CREATE TABLE nota (
 );
 
 -- INSERTs de exemplo
+-- Usuários (responsáveis)
+INSERT INTO usuario (nome, email, senha, tipo) VALUES
+('Carlos Mendes', 'carlos@email.com', 'senha123', 'admin'),
+('Patrícia Souza', 'patricia@email.com', 'senha456', 'conselheiro');
 
 -- Unidades
 INSERT INTO unidade (nome) VALUES 
@@ -70,7 +83,7 @@ INSERT INTO criterio (nome) VALUES
 ('Caderno'),
 ('Lição Bíblica');
 
--- Avaliações (registro com data automática)
+-- Avaliações (registro com data atual)
 INSERT INTO avaliacao (fkDesbravador) VALUES
 (1),  -- João
 (2);  -- Maria
@@ -86,7 +99,7 @@ INSERT INTO nota (fkAvaliacao, fkCriterio, pontuacao) VALUES
 (2, 1, 7.0),
 (2, 4, 8.0);
 
--- Consulta final com tipo de desbravador deduzido
+-- Consulta com dedução do tipo de desbravador
 SELECT 
     d.idDesbravador,
     d.nome,
@@ -101,11 +114,10 @@ SELECT
 FROM desbravador d
 JOIN unidade u ON d.fkUnidade = u.idUnidade;
 
-select*from desbravador;
-select*from avaliacao;
-select*from criterio;
-select*from nota;
-/*select*from usuario;
-*/
-select*from unidade;
-/*describe usuario;*/
+-- Consultas gerais
+SELECT * FROM usuario;
+SELECT * FROM unidade;
+SELECT * FROM desbravador;
+SELECT * FROM criterio;
+SELECT * FROM avaliacao;
+SELECT * FROM nota;
