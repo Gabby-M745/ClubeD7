@@ -10,12 +10,13 @@ USE aquatech;
 SHOW TABLES;
 
 -- Tabela USUARIO: responsáveis pelo acesso (conselheiro ou admin)
-CREATE TABLE usuario (
+CREATE TABLE usuario (/*conselheiro que cadastra desbravador*/
     idUsuario INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(45) NOT NULL,
+    sobrenome varchar(45) not null,
     email VARCHAR(45) UNIQUE NOT NULL,
     senha VARCHAR(45) NOT NULL,
-    tipo VARCHAR(20) DEFAULT 'conselheiro',
+    tipo VARCHAR(20), /*DEFAULT 'conselheiro',*/
     CONSTRAINT chkTipoUsuario CHECK (tipo IN ('conselheiro', 'admin'))
 );
 
@@ -45,14 +46,14 @@ CREATE TABLE criterio (
 -- Tabela AVALIACAO: avaliações feitas em uma data para um desbravador
 CREATE TABLE avaliacao (
     idAvaliacao INT PRIMARY KEY AUTO_INCREMENT,
-    registro DATE DEFAULT CURRENT_DATE,
+    registro DATE,
     fkDesbravador INT,
     FOREIGN KEY (fkDesbravador) REFERENCES desbravador(idDesbravador)
 );
 
 -- Tabela NOTA: liga avaliacao + criterio + pontuação
 CREATE TABLE nota (
-    id INT PRIMARY KEY AUTO_INCREMENT,
+    idNota INT PRIMARY KEY AUTO_INCREMENT,
     fkAvaliacao INT,
     fkCriterio INT,
     pontuacao DECIMAL(4,2),
