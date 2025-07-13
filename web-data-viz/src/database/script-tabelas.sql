@@ -3,7 +3,7 @@
 -- ter este arquivo aqui não significa que a tabela em seu BD estará como abaixo!
 
 -- comandos para mysql server
--- drop database aquatech;
+ -- drop database aquatech;
 CREATE DATABASE aquatech;
 
 USE aquatech;
@@ -63,9 +63,9 @@ CREATE TABLE nota (
 
 -- INSERTs de exemplo
 -- Usuários (responsáveis)
-INSERT INTO usuario (nome, email, senha, tipo) VALUES
-('Carlos Mendes', 'carlos@email.com', 'senha123', 'admin'),
-('Patrícia Souza', 'patricia@email.com', 'senha456', 'conselheiro');
+INSERT INTO usuario (nome, sobrenome, email, senha, tipo) VALUES
+('Carlos', 'Mendes', 'carlos@email.com', 'senha123', 'admin'),
+('Patrícia' ,'Souza', 'patricia@email.com', 'senha456', 'conselheiro');
 
 -- Unidades
 INSERT INTO unidade (nome) VALUES 

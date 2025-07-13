@@ -15,7 +15,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" />
 </head>
 
-<body onload="listar()">
+<!--<body onload="listar()"> foi criada para buscar as unidades existentes no banco de dados via API   (/unidades/listar) e armazenar no array listaUnidadeCadastradas.-->
+<body >
+
   <!--header inicio-->
   <div class="header">
     <div class="container">
@@ -62,11 +64,11 @@
             <input id="unidade" type="text" placeholder="Pantera Negra" />
           </div>
 
-          <div class="campo">
+         <!--    <div class="campo">
             <span>Clube:</span>
             <input id="clube" type="text" placeholder="Tigre da Montanha" />
           </div>
-          <!-- 
+        
           <div class="campo">
             <span>E-mail:</span>
             <input id="email" type="email" placeholder="meuemail@provedor.com" />
@@ -113,150 +115,43 @@
 <script>
 
   // Array para armazenar Unidade cadastradas para validação de código de ativação 
-  let listaUnidadeCadastradas = [];
+ //let listaUnidadeCadastradas = [];
 
   /*validação dos campos ao que é solicitado*/
 
-  function cadastrar() {
-    var validacaoFalhou = false; //simm, utilizando booleano.
+ function cadastrar() {
+  var unidadeVar = unidade.value;
 
-    // aguardar();
-
-    //Recupere o valor da nova input pelo unidade do id
-    // Agora vá para o método fetch logo abaixo
-    var unidadeVar = unidade.value;
-    var clubeVar = clube.value;/*cnpj*/
-    /*var emailVar = email.value;
-    var unidVar = unid.value;//unidade
-    var senhaVar = senha.value;*/
-    // var tipoVar = tipo.value;//select option
-    //var codigoVar = codigo_input.value;//???
-    var confirmacaoSenhaVar = confirmacaoS.value;
-
-    /*validação das seguintes:*/
-    if (unidadeVar.length <= 1) {
-      alert("Atenção! Preencha por completo o nome da unidade!")
-      validacaoFalhou = true;
-    } //SIMM! é verdade, verdade que falhou, por isso o acionamento do aviso
-    if (clubeVar.length <= 1) {//tamanho
-      alert("Atenção! Preencha por completo o nome do clube!");
-      validacaoFalhou = true;
-    }//sim, está certo em afirmar sobre o erro da validação, acionado
-
-    if (validacaoFalhou) {//é um alert generalizado para cada acionamento de mensagem?
-      alert("Corrija os campos antes de continuar.");
-      return; // parar aqui
-    }/*
-    if (!emailVar.includes("@") || !emailVar.includes(".")) {
-      alert("OBS: para o email, é obrigatório conter o '@' e '.'");
-      validacaoFalhou = true;
-    }
-    if (unidVar == "") {
-      alert("Atenção! Escolha uma opção! ");
-      validacaoFalhou = true;
-    }
-    if (senhaVar.length < 6) {
-      alert("Atenção! A senha possui critério mínimo de 6 digitos. ");
-      validacaoFalhou = true;
-    }
-
-    if (senhaVar !== confirmacaoSenhaVar) {
-      alert("Verificando senhas compatíveis...");
-      alert("Humm, não é igual os campos, preencha com atenção a senha em ambos os campos!");
-      validacaoFalhou = true;
-    }*/
-
-
-
-
-    // Verificando se há algum campo em branco
-    if (
-      unidadeVar == "" ||
-      clubeVar == "" ||
-    /*  emailVar == "" ||
-      unidVar == "" ||
-      senhaVar == "" ||*/
-      confirmacaoSenhaVar == ""
-      // codigoVar == ""//VOLTAAAAR
-    ) {
-      cardErro.style.display = "block";
-      mensagem_erro.innerHTML =
-        "(Mensagem de erro para todos os campos em branco)";
-
-      finalizarAguardar();
-      return false;//acionado quando campo está vazio
-    } else {
-      setInterval(sumirMensagem, 5000);//intervalo
-      //para ocultar mensagens de erro ou notificações após um certo período.
-    }
-    
-        // Verificando se o código de ativação é de alguma Unidade cadastrada
-        for (let i = 0; i < listaUnidadeCadastradas.length; i++) {
-          if (listaUnidadeCadastradas[i].codigo_ativacao == codigoVar) {
-            idUnidadeVincular = listaUnidadeCadastradas[i].id
-            console.log("Código de ativação válido.");
-            break;
-          } else {
-            cardErro.style.display = "block";
-            mensagem_erro.innerHTML = "(Mensagem de erro para código inválido)";
-            finalizarAguardar();
-          }
-        }
-    
-    // Enviando o valor da nova input
-    fetch("/usuarios/cadastrar", {//para rotas = usuarios
-      method: "POST",//estou enviando  dados do usuario para o servidor e assim registrar no banco de dados
-      // neste acaso, é para a rota usuarios 
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({//converter para string:
-
-        // crie um atributo que recebe o valor recuperado aqui
-        // Agora vá para o arquivo routes/usuario.js
-        /*estes não simples variáveis, "Eles são apenas unidades de atributos do objeto enviado no corpo da requisição fetch() — você está criando eles ali mesmo, neste exato ponto do código."*/
-        /*estes campos serão lidos no Controllers -- usuarioController.js  com o req.body*/
-        /*devem ser o mesmmo unidade para acessar no controller*/
-        unidadeServer: unidadeVar,
-        clubeServer: clubeVar,
-        emailServer: emailVar,
-        unidServer: unidVar,
-        senhaServer: senhaVar,
-        // idUnidadeVincularServer: idUnidadeVincular
-      }),
-    })
-      .then(function (resposta) {//é usado para processar a resposta da requisição fetch// se for positiva retorna  e significa que executa o fetch
-        console.log("resposta: ", resposta);
-
-        if (resposta.ok) {
-          cardErro.style.display = "block";
-
-          mensagem_erro.innerHTML =
-            "Cadastro realizado com sucesso! Redirecionando para tela de Login...";//2 segundos
-
-          /* setTimeout(() => {
-             window.location = "login.html"; /*por que te direciona para uma outra página de logar*/
-          // }, "2000");
-          setTimeout(function () {
-            window.location = "./dashboard/cards.html";
-          }, 1000); // apenas para exibir o loading
-
-          limparFormulario();
-          finalizarAguardar();
-        } else {
-          throw "Houve um erro ao tentar realizar o cadastro!";
-          //throw: é usado para lançar uma mensagem de erro se a resposta da requisição não for bem-sucedida. Isso permite que o erro seja capturado pelo bloco catch, onde você pode lidar com ele (por exemplo, registrando o erro no console).
-        }
-      })
-      .catch(function (resposta) {
-        console.log(`#ERRO: ${resposta}`);//exibe no console
-        finalizarAguardar();
-      });
-
-    return false;
-
-    /*ATÉ AGORA:  requisições assíncronas*/
+  if (unidadeVar.length <= 1) {
+    alert("Atenção! Preencha por completo o nome da unidade!");
+    return;
   }
+
+  fetch("/unidades/cadastrar", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      unidadeServer: unidadeVar
+    })
+  })
+    .then(function (resposta) {
+      if (resposta.ok) {
+        mensagem_erro.innerHTML = "Cadastro realizado com sucesso!";
+        setTimeout(function () {
+          window.location = "./dashboard/cards.html";
+        }, 1000);
+      } else {
+        resposta.json().then(json => {
+          mensagem_erro.innerHTML = json.mensagem;
+        });
+      }
+    })
+    .catch(function (erro) {
+      console.error(`#ERRO: ${erro}`);
+    });
+}
 
   // Apenas carregando as unidades (sem validar nenhum código)
   /*function listar() {

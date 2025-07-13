@@ -24,7 +24,9 @@ function buscarPorId(req, res) {
 }
 
 function cadastrar(req, res) {
-  var nome = req.body.nome;
+  var nome = req.body.unidadeServer;//VARIAÁVEL DO FETCH
+   // var clube = req.body.clubeServer;//VARIAÁVEL DO FETCH
+
  // var razaoSocial = req.body.razaoSocial;
 
  unidadeModel.buscarPorNome(nome).then((resultado) => {// ativa a cor de cima da dvariavel quando preenchido aqui

@@ -74,7 +74,7 @@
 
 <div class="campo">
   <label>Unidade:</label>
-  <select id="unidade">
+  <select id="unid">
     <option value="">Escolha sua unidade</option>
   </select>
 </div>
@@ -116,6 +116,14 @@
   //let listaUnidadeCadastradas = [];
 
   /*validação dos campos ao que é solicitado*/
+function limparFormulario() {
+  nome.value = "";
+  sobrenome.value = "";
+  email.value = "";
+  unid.value = "";
+  senha.value = "";
+  confirmacaoS.value = "";
+}
 
   function cadastrar() {
     var validacaoFalhou = false; //simm, utilizando booleano.
@@ -204,7 +212,7 @@
         }
     */
     // Enviando o valor da nova input
-    fetch("/usuarios/cadastrar", {//para rotas = usuarios
+    fetch("/desbravadores/cadastrar", {//para rotas = usuarios
       method: "POST",//estou enviando  dados do usuario para o servidor e assim registrar no banco de dados
       // neste acaso, é para a rota usuarios 
       headers: {
@@ -236,7 +244,7 @@
 
           /* setTimeout(() => {
              window.location = "login.html"; /*por que te direciona para uma outra página de logar*/
-          // }, "2000");
+          // }, "2000");*/
           setTimeout(function () {
             window.location = "./dashboard/cards.html";
           }, 1000); // apenas para exibir o loading
@@ -259,20 +267,29 @@
   }
 
   // Apenas carregando as unidades (sem validar nenhum código)
-  /*function listar() {
-    fetch("/unidades/listar", {
-      method: "GET",
-    })
-      .then((resposta) => {
-        resposta.json().then((unidades) => {
-          unidades.forEach((unidade) => {
-            listaUnidadeCadastradas.push(unidade);
-          });
-        });
-      })
-      .catch((resposta) => {
-        console.log(`#ERRO: ${resposta}`);
+function listar() {
+  fetch("/unidades/listar", {/*através dessa linha, obtenho o que há no banco de dados do cadastro de unidades, e forneço para se ter as opções*/
+    //usando o método GET
+    method: "GET"
+  })
+    .then(resposta => resposta.json())
+    .then(unidades => {
+      const selectUnidade = document.getElementById("unid");
+      // Limpa o select antes de preencher novamente
+      selectUnidade.innerHTML = '<option value="">Escolha sua unidade</option>';
+
+      unidades.forEach(unidade => {
+        const option = document.createElement("option");
+        option.value = unidade.id;
+        option.textContent = unidade.nome;
+        selectUnidade.appendChild(option);
       });
-  }*/
+    })
+    .catch(erro => {
+      console.error("Erro ao listar unidades:", erro);
+    });
+}
+
+
 
 </script>
