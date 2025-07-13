@@ -14,7 +14,7 @@ CREATE TABLE usuario (/*conselheiro que cadastra desbravador*/
     idUsuario INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(45) NOT NULL,
     sobrenome varchar(45) not null,
-    email VARCHAR(45) UNIQUE NOT NULL,
+    email VARCHAR(45) UNIQUE NOT NULL,/*unico*/
     senha VARCHAR(45) NOT NULL,
     tipo VARCHAR(20), /*DEFAULT 'conselheiro',*/
     CONSTRAINT chkTipoUsuario CHECK (tipo IN ('conselheiro', 'admin'))
