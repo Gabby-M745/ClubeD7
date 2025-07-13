@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>AquaTech | Cadastro</title>
+
+  <script src="./js/sessao.js"></script>
+
+  <link rel="stylesheet" href="./css/estilo.css" />
+  <link rel="icon" href="./assets/icon/favicon2.ico" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+</head>
+
+<body onload="listar()">
+  <!--header inicio-->
+  <div class="header">
+    <div class="container">
+      <h1 class="titulo">AquaTech</h1>
+      <ul class="navbar">
+        <li>
+          <a href="index.html">Inicial</a>
+        </li>
+        <li>
+          <a href="simulador.html">Simulador</a>
+        </li>
+        <li>|</li>
+        <li>
+          <a href="login.html">Login</a>
+        </li>
+        <li class="agora">
+          <a href="#">Cadastro Desbravador</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!--header fim-->
+
+  <div class="login">
+    <div class="alerta_erro">
+      <div class="card_erro" id="cardErro">
+        <span id="mensagem_erro"></span>
+      </div>
+    </div>
+    <div class="container">
+      <div class="card card-cadastro">
+        <h2>Bem-vindo!</h2>
+        <div class="formulario">
+          <!--
+                         Para inserir mais um campo, copie uma das inputs abaixo.
+                         Assim que inserir vá para o script abaixo.
+                     -->
+          <!-- <div class="campo">
+            <span>Código de ativação:</span>
+            <input id="codigo_input" type="text" placeholder="Insira aqui seu código" />
+          </div> -->
+          <div class="campo">
+            <span>Nome:</span>
+            <input id="nome" type="text" placeholder="Seu nome" />
+          </div>
+
+          <div class="campo">
+            <span>Sobrenome:</span>
+            <input id="sobrenome" type="text" placeholder="01234567891" />
+          </div>
+
+          <div class="campo">
+            <span>E-mail:</span>
+            <input id="email" type="email" placeholder="meuemail@provedor.com" />
+          </div>
+
+          <div class="campo">
+            <span>Unidade:</span>
+            <input id="unid" type="text" placeholder="Nome da unidade (ex: Falcões)" />
+          </div>
+
+          <div class="campo">
+            <span>Senha:</span>
+            <input id="senha" type="password" placeholder="******" />
+          </div>
+          <div class="campo">
+            <span>Confirmação da Senha:</span>
+            <input id="confirmacaoS" type="password" placeholder="******" />
+          </div>
+          <button class="botao" onclick="cadastrar()">Cadastrar</button>
+        </div>
+        <div id="div_aguardar" class="loading-div">
+          <img src="./assets/circle-loading.gif" id="loading-gif" />
+        </div>
+
+        <div id="div_erros_login"></div>
+      </div>
+    </div>
+  </div>
+
+  <!--footer inicio-->
+  <div class="footer">
+    <div class="container">
+      <h4>Feito com amor por aluno &hearts; SPTech &copy; 2023</h4>
+      <span class="version">v1.0.0</span>
+    </div>
+  </div>
+  <!--footer fim-->
+</body>
+
+</html>
+
+<script>
+
+  // Array para armazenar Unidade cadastradas para validação de código de ativação 
+  //let listaUnidadeCadastradas = [];
+
+  /*validação dos campos ao que é solicitado*/
+
+  function cadastrar() {
+    var validacaoFalhou = false; //simm, utilizando booleano.
+
+    // aguardar();
+
+    //Recupere o valor da nova input pelo nome do id
+    // Agora vá para o método fetch logo abaixo
+    var nomeVar = nome.value;
+    var sobrenomeVar = sobrenome.value;/*cnpj*/
+    var emailVar = email.value;
+    var unidVar = unid.value;
+    var senhaVar = senha.value;
+    // var tipoVar = tipo.value;//select option
+    //var codigoVar = codigo_input.value;//???
+    var confirmacaoSenhaVar = confirmacaoS.value;
+
+    /*validação das seguintes:*/
+    if (nomeVar.length <= 1) {
+      alert("Atenção! Preencha por completo o nome!")
+      validacaoFalhou = true;
+    } //SIMM! é verdade, verdade que falhou, por isso o acionamento do aviso
+
+    if (!emailVar.includes("@") || !emailVar.includes(".")) {
+      alert("OBS: para o email, é obrigatório conter o '@' e '.'");
+      validacaoFalhou = true;
+    }
+    if (unidVar == "") {
+      alert("Atenção! Escolha uma opção! ");
+      validacaoFalhou = true;
+    }
+    if (senhaVar.length < 6) {
+      alert("Atenção! A senha possui critério mínimo de 6 digitos. ");
+      validacaoFalhou = true;
+    }
+
+    if (senhaVar !== confirmacaoSenhaVar) {
+      alert("Verificando senhas compatíveis...");
+      alert("Humm, não é igual os campos, preencha com atenção a senha em ambos os campos!");
+      validacaoFalhou = true;
+    }
+
+    if (sobrenomeVar.length <= 1) {//tamanho
+      alert("Atenção! Preencha por completo o sobrenome!");
+      validacaoFalhou = true;
+    }//sim, está certo em afirmar sobre o erro da validação, acionado
+
+    if (validacaoFalhou) {//é um alert generalizado para cada acionamento de mensagem?
+      alert("Corrija os campos antes de continuar.");
+      return; // parar aqui
+    }
+
+
+    // Verificando se há algum campo em branco
+    if (
+      nomeVar == "" ||
+      sobrenomeVar == "" ||
+      emailVar == "" ||
+      unidVar == "" ||
+      senhaVar == "" ||
+      confirmacaoSenhaVar == ""
+      // codigoVar == ""//VOLTAAAAR
+    ) {
+      cardErro.style.display = "block";
+      mensagem_erro.innerHTML =
+        "(Mensagem de erro para todos os campos em branco)";
+
+      finalizarAguardar();
+      return false;//acionado quando campo está vazio
+    } else {
+      setInterval(sumirMensagem, 5000);//intervalo
+      //para ocultar mensagens de erro ou notificações após um certo período.
+    }
+    /*
+        // Verificando se o código de ativação é de alguma Unidade cadastrada
+        for (let i = 0; i < listaUnidadeCadastradas.length; i++) {
+          if (listaUnidadeCadastradas[i].codigo_ativacao == codigoVar) {
+            idUnidadeVincular = listaUnidadeCadastradas[i].id
+            console.log("Código de ativação válido.");
+            break;
+          } else {
+            cardErro.style.display = "block";
+            mensagem_erro.innerHTML = "(Mensagem de erro para código inválido)";
+            finalizarAguardar();
+          }
+        }
+    */
+    // Enviando o valor da nova input
+    fetch("/usuarios/cadastrar", {//para rotas = usuarios
+      method: "POST",//estou enviando  dados do usuario para o servidor e assim registrar no banco de dados
+      // neste acaso, é para a rota usuarios 
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({//converter para string:
+
+        // crie um atributo que recebe o valor recuperado aqui
+        // Agora vá para o arquivo routes/usuario.js
+        /*estes não simples variáveis, "Eles são apenas nomes de atributos do objeto enviado no corpo da requisição fetch() — você está criando eles ali mesmo, neste exato ponto do código."*/
+        /*estes campos serão lidos no Controllers -- usuarioController.js  com o req.body*/
+        /*devem ser o mesmmo nome para acessar no controller*/
+        nomeServer: nomeVar,
+        sobrenomeServer: sobrenomeVar,
+        emailServer: emailVar,
+        unidServer: unidVar,
+        senhaServer: senhaVar,
+        // idUnidadeVincularServer: idUnidadeVincular
+      }),
+    })
+      .then(function (resposta) {//é usado para processar a resposta da requisição fetch// se for positiva retorna  e significa que executa o fetch
+        console.log("resposta: ", resposta);
+
+        if (resposta.ok) {
+          cardErro.style.display = "block";
+
+          mensagem_erro.innerHTML =
+            "Cadastro realizado com sucesso! Redirecionando para tela de Login...";//2 segundos
+
+          /* setTimeout(() => {
+             window.location = "login.html"; /*por que te direciona para uma outra página de logar*/
+          // }, "2000");
+          setTimeout(function () {
+            window.location = "./dashboard/cards.html";
+          }, 1000); // apenas para exibir o loading
+          
+          limparFormulario();
+          finalizarAguardar();
+        } else {
+          throw "Houve um erro ao tentar realizar o cadastro!";
+          //throw: é usado para lançar uma mensagem de erro se a resposta da requisição não for bem-sucedida. Isso permite que o erro seja capturado pelo bloco catch, onde você pode lidar com ele (por exemplo, registrando o erro no console).
+        }
+      })
+      .catch(function (resposta) {
+        console.log(`#ERRO: ${resposta}`);//exibe no console
+        finalizarAguardar();
+      });
+
+    return false;
+
+    /*ATÉ AGORA:  requisições assíncronas*/
+  }
+
+  // Apenas carregando as unidades (sem validar nenhum código)
+  /*function listar() {
+    fetch("/unidades/listar", {
+      method: "GET",
+    })
+      .then((resposta) => {
+        resposta.json().then((unidades) => {
+          unidades.forEach((unidade) => {
+            listaUnidadeCadastradas.push(unidade);
+          });
+        });
+      })
+      .catch((resposta) => {
+        console.log(`#ERRO: ${resposta}`);
+      });
+  }*/
+
+</script>
