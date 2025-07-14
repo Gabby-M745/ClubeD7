@@ -24,9 +24,9 @@ function autenticar(req, res) {//login
                               .then((resultadoAquarios) => {
                                   if (resultadoAutenticar.length > 0) {*/
                         res.json({ //informações sobre o usuário autenticado.
-                            idUsuario: resultadoAutenticar[0].idUsuario,
+                            id: resultadoAutenticar[0].idUsuario,
                             email: resultadoAutenticar[0].email,
-                            nome: resultadoAutenticar[0].nome,
+                           // nome: resultadoAutenticar[0].nome,
                           //  sobrenome: resultadoAutenticar[0].sobrenome,//nome=> sobrenome
                             senha: resultadoAutenticar[0].senha,/*RECOMENDA-SE NÃO TER AQUI A SENHA, O CAMPO, SEGURANÇA PARA O CLIENTE */
                           //  tipo: resultadoAutenticar[0].tipo/*, */
@@ -84,14 +84,14 @@ function cadastrar(req, res) {
     } else if (senha == undefined) {
         res.status(400).send("Sua senha está undefined!");
 
-    } else if (fkUnidade == undefined) {
-        res.status(400).send("Sua unidade a vincular está undefined!");//unidade
+   /* } else if (fkUnidade == undefined) {
+        res.status(400).send("Sua unidade a vincular está undefined!");//unidade*/
     } else {
 
         // Passe os valores como parâmetro e vá para o arquivo usuarioModel.js
         /*vá primeiro no moder do usuario, aqui vc retorna dps que alterar/atualizar lá*/
         /*dps de adionar o campo sobrenome, volte aqui e atualize, é comum errar ou esquecer de voltar aqui, então atenção!! */
-        usuarioModel.cadastrar(nome, sobrenome, email, tipo, senha, fkUnidade)
+        usuarioModel.cadastrar(nome, sobrenome, email, tipo, senha)
             .then(//perguntar //se deu certo
                 function (resultado) {
                     res.json(resultado);

@@ -17,10 +17,11 @@ var HOST_APP = process.env.APP_HOST;
 var app = express();
 
 var indexRouter = require("./src/routes/index");
+var desbravadoresRouter = require("./src/routes/desbravadores");
 var usuarioRouter = require("./src/routes/usuarios");
 var avisosRouter = require("./src/routes/avisos");
 var medidasRouter = require("./src/routes/medidas");
-var aquariosRouter = require("./src/routes/aquarios");
+var criteriosRouter = require("./src/routes/criterios");
 var unidadesRouter = require("./src/routes/unidades");
 
 app.use(express.json());  // permite enviar/receber JSON
@@ -31,9 +32,10 @@ app.use(cors());  // permite acesso cruzado (por exemplo: do navegador para o se
 
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
+app.use("/desbravadores", desbravadoresRouter);
 app.use("/avisos", avisosRouter);
 app.use("/medidas", medidasRouter);
-app.use("/aquarios", aquariosRouter);
+app.use("/criterios", criteriosRouter);
 app.use("/unidades", unidadesRouter);
 
 app.listen(PORTA_APP, function () {
